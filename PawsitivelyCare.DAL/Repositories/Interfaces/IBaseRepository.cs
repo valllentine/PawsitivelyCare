@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace PawsitivelyCare.DAL.Repositories.Interfaces
 {
-    public interface IBaseRepository<T>
+    public interface IBaseRepository<TEntity, TKey>
     {
-        Task<IEnumerable<T>> GetAllAsync();
-        Task<T> GetAsync(int id);
-        Task<Guid> CreateAsync(T entity);
-        Task UpdateAsync(T entity);
+        Task<IEnumerable<TEntity>> GetAllAsync();
+        Task<TEntity> GetAsync(TKey id);
+        Task<int> CreateAsync(TEntity entity);
+        Task UpdateAsync(TEntity entity);
         Task<bool> DeleteAsync(int id);
     }
 }
