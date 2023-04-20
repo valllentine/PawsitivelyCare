@@ -1,4 +1,10 @@
+using Microsoft.EntityFrameworkCore;
+using PawsitivelyCare.DAL;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<PawsitivelyCareDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("PawsitivelyCareDBConnection")));
 
 // Add services to the container.
 builder.Services.AddRazorPages();
