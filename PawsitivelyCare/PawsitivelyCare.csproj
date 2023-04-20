@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Диплом\Backend\PawsitivelyCare.DAL\PawsitivelyCare.DAL.csproj" />
+    <ProjectReference Include="..\PawsitivelyCare.DAL\PawsitivelyCare.DAL.csproj" />
   </ItemGroup>
 
 </Project>
