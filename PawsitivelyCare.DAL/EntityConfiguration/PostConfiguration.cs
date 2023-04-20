@@ -1,12 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using PawsitivelyCare.DAL.Entities;
 
 namespace PawsitivelyCare.DAL.EntityConfiguration
 {
-    internal class PostConfiguration
+    public class PostConfiguration : IEntityTypeConfiguration<Post>
     {
+        public void Configure(EntityTypeBuilder<Post> builder)
+        {
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).ValueGeneratedOnAdd();
+
+            builder.Property(x => x.Title).IsRequired().HasMaxLength(100);
+            builder.Property(x => x.Content).IsRequired().HasMaxLength(5000);
+            builder.Property(x => x.CreatedAt).IsRequired();
+            builder.Property(x => x.PostTypeId).IsRequired();
+
+            builder.ToTable("Posts");
+        }
     }
 }

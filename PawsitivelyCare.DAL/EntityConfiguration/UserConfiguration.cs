@@ -1,12 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore;
+using PawsitivelyCare.DAL.Entities;
 
 namespace PawsitivelyCare.DAL.EntityConfiguration
 {
-    internal class UserConfiguration
+    public class UserConfiguration : IEntityTypeConfiguration<User>
     {
+        public void Configure(EntityTypeBuilder<User> builder)
+        {
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).ValueGeneratedOnAdd();
+
+            builder.Property(x => x.Name).IsRequired().HasMaxLength(20);
+            builder.Property(x => x.Surname).IsRequired().HasMaxLength(20);
+            builder.Property(x => x.Email).IsRequired().HasMaxLength(254);
+            builder.Property(x => x.Password).IsRequired();
+            builder.Property(x => x.CreatedAt).IsRequired();
+
+            builder.ToTable("Users");
+        }
     }
 }
