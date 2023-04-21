@@ -17,19 +17,22 @@ namespace PawsitivelyCare.DAL
         public DbSet<Post> Posts { get; set; }
         public DbSet<PostType> PostTypes { get; set; }
 
-        // метод, который конфигурирует модель данных
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new ChatConfiguration());
+            modelBuilder.ApplyConfiguration(new ChatMessageConfiguration());
+            modelBuilder.ApplyConfiguration(new PostConfiguration());
+            modelBuilder.ApplyConfiguration(new PostTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new RoleConfiguration());
+            modelBuilder.ApplyConfiguration(new UserConfiguration());
+
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Roles)
+                .WithMany(r => r.Users);
 
             modelBuilder.Entity<User>()
                 .HasMany(u => u.Chats)
-                .WithMany(r => r.Users)
-                .UsingEntity<Dictionary<string, object>>(
-                    "UserRoles",
-                    ur => ur.HasOne<Chat>().WithMany().HasForeignKey("RoleId"),
-                    ur => ur.HasOne<User>().WithMany().HasForeignKey("UserId")
-                );
+                .WithMany(r => r.Users);
 
             base.OnModelCreating(modelBuilder);
         }
