@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PawsitivelyCare.DAL.Entities
+﻿namespace PawsitivelyCare.DAL.Entities
 {
     public class User
     {
@@ -16,10 +9,7 @@ namespace PawsitivelyCare.DAL.Entities
         public string Password { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        [ForeignKey("Role")]
-        public int RoleId { get; set; }
-
-        public virtual Role Role { get; set; }
+        public virtual ICollection<Role> Roles { get; set; }
         public virtual ICollection<Chat> Chats { get; set; }
     }
 }

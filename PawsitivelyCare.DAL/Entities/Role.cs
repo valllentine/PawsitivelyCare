@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PawsitivelyCare.DAL.Entities
+﻿namespace PawsitivelyCare.DAL.Entities
 {
     public class Role
     {
