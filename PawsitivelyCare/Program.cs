@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using PawsitivelyCare.DAL;
+using PawsitivelyCare.DAL.Contexts;
 
 var builder = WebApplication.CreateBuilder(args);
 

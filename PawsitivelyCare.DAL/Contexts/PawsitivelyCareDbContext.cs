@@ -2,7 +2,7 @@
 using PawsitivelyCare.DAL.Entities;
 using PawsitivelyCare.DAL.EntityConfiguration;
 
-namespace PawsitivelyCare.DAL
+namespace PawsitivelyCare.DAL.Contexts
 {
     public class PawsitivelyCareDbContext : DbContext
     {
