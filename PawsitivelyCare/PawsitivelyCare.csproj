@@ -22,10 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\PawsitivelyCare.BLL\PawsitivelyCare.BLL.csproj" />
     <ProjectReference Include="..\PawsitivelyCare.DAL\PawsitivelyCare.DAL.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="DTOs\" />
+    <ProjectReference Include="..\PawsitivelyCare.Infrastructure\PawsitivelyCare.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
