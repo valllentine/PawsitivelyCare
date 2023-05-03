@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PawsitivelyCare.BLL", "..\P
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PawsitivelyCare.DAL", "..\PawsitivelyCare.DAL\PawsitivelyCare.DAL.csproj", "{42204F16-E771-4B1D-BDC6-4A37E988DBB8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PawsitivelyCare.Infrastructure", "..\PawsitivelyCare.Infrastructure\PawsitivelyCare.Infrastructure.csproj", "{02313B8D-0EC6-46AB-9056-D722EE03C615}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{42204F16-E771-4B1D-BDC6-4A37E988DBB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42204F16-E771-4B1D-BDC6-4A37E988DBB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{42204F16-E771-4B1D-BDC6-4A37E988DBB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02313B8D-0EC6-46AB-9056-D722EE03C615}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02313B8D-0EC6-46AB-9056-D722EE03C615}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02313B8D-0EC6-46AB-9056-D722EE03C615}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02313B8D-0EC6-46AB-9056-D722EE03C615}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
