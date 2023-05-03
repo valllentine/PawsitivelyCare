@@ -1,16 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PawsitivelyCare.DAL.Contexts;
 using PawsitivelyCare.DAL.Repositories.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PawsitivelyCare.DAL.Repositories.Realizations
 {
-    internal class BaseRepository<TEntity, TKey> : IBaseRepository<TEntity, TKey> where TEntity : class //abstract??
+    public class BaseRepository<TEntity, TKey> : IBaseRepository<TEntity, TKey> where TEntity : class //abstract??
     {
         private readonly IDbContextFactory<PawsitivelyCareDbContext> _contextFactory;
 
