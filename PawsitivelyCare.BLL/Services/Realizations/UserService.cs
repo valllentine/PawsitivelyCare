@@ -3,15 +3,10 @@ using PawsitivelyCare.BLL.Models;
 using PawsitivelyCare.BLL.Services.Interfaces;
 using PawsitivelyCare.DAL.Entities;
 using PawsitivelyCare.DAL.Repositories.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PawsitivelyCare.BLL.Services.Realizations
 {
-    internal class UserService : IUserService
+    public class UserService : IUserService
     {
         private readonly IBaseRepository<User, int> _userRepository;
         protected readonly IMapper _mapper;
@@ -22,9 +17,9 @@ namespace PawsitivelyCare.BLL.Services.Realizations
             _mapper = mapper;
         }
 
-        public async Task<UserModel> Add(UserModel address)
+        public async Task<UserModel> Add(UserModel user)
         {
-            var entity = _mapper.Map<User>(address);
+            var entity = _mapper.Map<User>(user);
             var createdEntity = await _userRepository.AddAsync(entity);
 
             return _mapper.Map<UserModel>(createdEntity);
@@ -44,7 +39,7 @@ namespace PawsitivelyCare.BLL.Services.Realizations
             await _userRepository.UpdateAsync(userEntity);
         }
 
-        public async Task Delete(Guid id)
+        public async Task Delete(int id)
         {
             var userEntity = await _userRepository.GetAsync(id);
 
