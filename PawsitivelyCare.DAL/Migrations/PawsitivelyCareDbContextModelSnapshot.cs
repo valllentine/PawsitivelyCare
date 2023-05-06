@@ -40,6 +40,7 @@ namespace PawsitivelyCare.DAL.Migrations
             modelBuilder.Entity("PawsitivelyCare.DAL.Entities.Chat", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
@@ -55,6 +56,7 @@ namespace PawsitivelyCare.DAL.Migrations
             modelBuilder.Entity("PawsitivelyCare.DAL.Entities.ChatMessage", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ChatId")
@@ -82,6 +84,7 @@ namespace PawsitivelyCare.DAL.Migrations
             modelBuilder.Entity("PawsitivelyCare.DAL.Entities.Post", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Content")
@@ -110,6 +113,7 @@ namespace PawsitivelyCare.DAL.Migrations
             modelBuilder.Entity("PawsitivelyCare.DAL.Entities.PostType", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Type")
@@ -124,6 +128,7 @@ namespace PawsitivelyCare.DAL.Migrations
             modelBuilder.Entity("PawsitivelyCare.DAL.Entities.Role", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("RoleName")
@@ -138,6 +143,7 @@ namespace PawsitivelyCare.DAL.Migrations
             modelBuilder.Entity("PawsitivelyCare.DAL.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")

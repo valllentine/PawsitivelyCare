@@ -16,7 +16,7 @@ namespace PawsitivelyCare.DAL.Repositories.Interfaces
              Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
              params Expression<Func<TEntity, object>>[] includes);
         Task<List<TEntity>> Query(Expression<Func<TEntity, bool>>? filter = null,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null, int count = 0, int offset = 0,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null, int count = 0, 
             params Expression<Func<TEntity, object>>[] includes);
         Task<int> QueryCount(Expression<Func<TEntity, bool>> filter);
     }

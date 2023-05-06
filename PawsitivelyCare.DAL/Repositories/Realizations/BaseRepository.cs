@@ -64,11 +64,11 @@ namespace PawsitivelyCare.DAL.Repositories.Realizations
 
         public async Task<TEntity?> QueryFirst(Expression<Func<TEntity, bool>>? filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null, params Expression<Func<TEntity, object>>[] includes)
         {
-            var entities = await Query(filter, orderBy, 1, 0, includes);
+            var entities = await Query(filter, orderBy, 1, includes);
             return entities.FirstOrDefault();
         }
 
-        public async Task<List<TEntity>> Query(Expression<Func<TEntity, bool>>? filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null, int count = 0, int offset = 0, params Expression<Func<TEntity, object>>[] includes)
+        public async Task<List<TEntity>> Query(Expression<Func<TEntity, bool>>? filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null, int count = 0, params Expression<Func<TEntity, object>>[] includes)
         {
             using var context = _contextFactory.CreateDbContext();
             IQueryable<TEntity> query = GetDbSet(context).AsNoTracking();
@@ -78,9 +78,6 @@ namespace PawsitivelyCare.DAL.Repositories.Realizations
 
             if (filter != null)
                 query = query.Where(filter);
-
-            if (offset > 0)
-                query = query.Skip(offset);
 
             if (count > 0)
                 query = query.Take(count);

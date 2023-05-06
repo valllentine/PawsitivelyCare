@@ -9,7 +9,7 @@ namespace PawsitivelyCare.DAL.EntityConfiguration
         public void Configure(EntityTypeBuilder<PostType> builder)
         {
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.Id).ValueGeneratedNever().IsRequired();
+            builder.Property(x => x.Id).IsRequired().ValueGeneratedOnAdd();
 
             builder.Property(x => x.Type).IsRequired();
 
