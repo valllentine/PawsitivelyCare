@@ -5,6 +5,7 @@ using PawsitivelyCare.DAL.Contexts;
 using PawsitivelyCare.DAL.Entities;
 using PawsitivelyCare.DAL.Repositories.Interfaces;
 using PawsitivelyCare.DAL.Repositories.Realizations;
+using PawsitivelyCare.Mappings;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,20 +13,24 @@ var builder = WebApplication.CreateBuilder(args);
 //    options.UseSqlServer(builder.Configuration.GetConnectionString("PawsitivelyCareDBConnection")));
 
 builder.Services.AddDbContextFactory<PawsitivelyCareDbContext>(
-            options => options.UseSqlServer($"name={builder.Configuration.GetConnectionString("PawsitivelyCareDBConnection")}"));
+            options => options.UseSqlServer(builder.Configuration.GetConnectionString("PawsitivelyCareDBConnection")));
 
 builder.Services.AddScoped<IUserService, UserService>();
 
-builder.Services.AddScoped<IBaseRepository<User, int>, BaseRepository<User, int>>();
+builder.Services.AddScoped<IBaseRepository<User, Guid>, BaseRepository<User, Guid>>();
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-builder.Services.AddAuthorization();
+builder.Services.AddAutoMapper(typeof(UserProfile));
+
 builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
-app.UseSwaggerUI();
 
 if (!app.Environment.IsDevelopment())
 {
@@ -33,11 +38,12 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseSwagger(x => x.SerializeAsV2 = true);
-app.UseHttpsRedirection();
-app.UseStaticFiles();
+app.UseSwaggerUI();
+app.UseSwagger();
 
-app.UseRouting();
+app.UseHttpsRedirection();
+
+app.MapControllers();
 
 app.UseAuthorization();
 
