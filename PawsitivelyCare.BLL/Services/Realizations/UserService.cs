@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using BCrypt.Net;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using PawsitivelyCare.BLL.Models;
 using PawsitivelyCare.BLL.Services.Interfaces;
 using PawsitivelyCare.DAL.Entities;
@@ -8,24 +10,31 @@ namespace PawsitivelyCare.BLL.Services.Realizations
 {
     public class UserService : IUserService
     {
-        private readonly IBaseRepository<User, int> _userRepository;
+        private readonly IBaseRepository<User, Guid> _userRepository;
         protected readonly IMapper _mapper;
 
-        public UserService(IBaseRepository<User, int> userRepository, IMapper mapper)
+        public UserService(IBaseRepository<User, Guid> userRepository, IMapper mapper)
         {
             _userRepository = userRepository;
             _mapper = mapper;
         }
 
-        public async Task<UserModel> Add(UserModel user)
+        public async Task<UserModel> Register(UserModel model)
         {
-            var entity = _mapper.Map<User>(user);
-            var createdEntity = await _userRepository.AddAsync(entity);
+            if (_userRepository.QueryFirst(u=>u.Email == model.Email) != null)
+                throw new ArgumentException("Username with email " + model.Email + " already exist");
+
+            var userEntity = _mapper.Map<User>(model);
+
+            userEntity.PasswordHash = BCrypt.Net.BCrypt.HashPassword(model.Password);
+            userEntity.CreatedAt= DateTime.Now;
+
+            var createdEntity = await _userRepository.AddAsync(userEntity);
 
             return _mapper.Map<UserModel>(createdEntity);
         }
 
-        public async Task<UserModel> Get(int id)
+        public async Task<UserModel> Get(Guid id)
         {
             var User = await _userRepository.GetAsync(id);
 
@@ -39,7 +48,7 @@ namespace PawsitivelyCare.BLL.Services.Realizations
             await _userRepository.UpdateAsync(userEntity);
         }
 
-        public async Task Delete(int id)
+        public async Task Delete(Guid id)
         {
             var userEntity = await _userRepository.GetAsync(id);
 
