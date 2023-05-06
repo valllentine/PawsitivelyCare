@@ -9,7 +9,7 @@ namespace PawsitivelyCare.DAL.EntityConfiguration
         public void Configure(EntityTypeBuilder<Chat> builder)
         {
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.Id).ValueGeneratedOnAdd();
+            builder.Property(x => x.Id).ValueGeneratedNever().IsRequired();
 
             builder.Property(x => x.Name).IsRequired().HasMaxLength(50);
 
