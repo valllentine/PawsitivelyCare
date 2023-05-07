@@ -9,12 +9,12 @@ namespace PawsitivelyCare.Controllers
 {
     [ApiController]
     [Route("api/users/")]
-    public class UserController : ControllerBase
+    public class UsersController : ControllerBase
     {
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
 
-        public UserController(IMapper mapper, IUserService userService)
+        public UsersController(IMapper mapper, IUserService userService)
         {
             _mapper = mapper;
             _userService = userService;

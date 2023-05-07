@@ -55,9 +55,9 @@ namespace PawsitivelyCare.BLL.Services.Realizations
 
         public async Task<UserModel> Get(Guid id)
         {
-            var User = await _userRepository.GetAsync(id);
+            var user = await _userRepository.GetAsync(id);
 
-            return _mapper.Map<UserModel>(User);
+            return _mapper.Map<UserModel>(user);
         }
 
         public async Task Update(UserModel userModel)

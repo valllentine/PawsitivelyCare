@@ -16,10 +16,13 @@ builder.Services.AddDbContextFactory<PawsitivelyCareDbContext>(
             options => options.UseSqlServer(builder.Configuration.GetConnectionString("PawsitivelyCareDBConnection")));
 
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IPostService, PostService>();
 
 builder.Services.AddScoped<IBaseRepository<User, Guid>, BaseRepository<User, Guid>>();
+builder.Services.AddScoped<IBaseRepository<Post, Guid>, BaseRepository<Post, Guid>>();
 
 builder.Services.AddAutoMapper(typeof(UserProfile));
+builder.Services.AddAutoMapper(typeof(PostProfile));
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
