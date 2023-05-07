@@ -28,34 +28,36 @@ namespace PawsitivelyCare.Controllers
         }
 
         [AllowAnonymous]
+        [HttpPost("login")]
+        public async Task<ActionResult> Login(LoginUserDto userDto)
+        {
+            var userModel = _mapper.Map<UserModel>(userDto);
+            var token = await _userService.Login(userModel);
+            return Ok(token);
+        }
+
+        [AllowAnonymous]
         [HttpPost("register")]
-        public async Task<ActionResult> Register(CreateUserDto userDto)
+        public async Task<ActionResult> Register(RegisterUserDto userDto)
         {
             var userModel = _mapper.Map<UserModel>(userDto);
             var createdUser = await _userService.Register(userModel);
             return Ok(new { message = "Registration successful", createdUser });
         }
 
-        //[HttpPost]
-        //public async Task<ActionResult<int>> AddUser([FromBody] CreateUserDto userDto)
-        //{
-        //    var userModel = _mapper.Map<UserModel>(userDto);
-        //    var createdAddress = await _userService.Register(userModel);
-        //    return Ok(createdAddress.Id);
-        //}
+        [HttpPut("update/{id}")]
+        public async Task<ActionResult<int>> Update(Guid id, [FromBody] UpdateUserDto userDto)
+        {
+            var userModel = await _userService.Get(id);
 
-        //[HttpPut("{id}")]
-        //public async Task<ActionResult> UpdateUser(int id, [FromBody] UpdateUserDto userDto)
-        //{
-        //    var userModel = await _userService.Get(id);
+            if (userModel == null)
+                return NotFound();
 
-        //    if (userModel == null)
-        //        return NotFound();
+            _mapper.Map(userDto, userModel);
+            await _userService.Update(userModel);
 
-        //    _mapper.Map(userDto, userModel);
-        //    await _userService.Update(userModel);
-        //    return Ok();
-        //}
+            return Ok(new { message = "User updated successfully" });
+        }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteUser(Guid id)
