@@ -10,7 +10,9 @@ namespace PawsitivelyCare.Mappings
         public UserProfile()
         {
             CreateMap<UserModel, User>().ReverseMap();
-            CreateMap<CreateUserDto, UserModel>();
+            CreateMap<RegisterUserDto, UserModel>();
+            CreateMap<UpdateUserDto, UserModel>();
+            CreateMap<LoginUserDto, UserModel>();
         }
     }
 }
