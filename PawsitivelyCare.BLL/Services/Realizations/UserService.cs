@@ -10,6 +10,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.Extensions.Options;
+using PawsitivelyCare.BLL.Common.Auth;
 
 namespace PawsitivelyCare.BLL.Services.Realizations
 {
@@ -18,24 +20,24 @@ namespace PawsitivelyCare.BLL.Services.Realizations
         private readonly IBaseRepository<User, Guid> _userRepository;
         protected readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
+        private readonly IOptions<AuthOptions> _authOptions;
 
-        public UserService(IBaseRepository<User, Guid> userRepository, IMapper mapper, IConfiguration configuration)
+        public UserService(IBaseRepository<User, Guid> userRepository, IMapper mapper, IConfiguration configuration, IOptions<AuthOptions> authOptions)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _configuration = configuration;
+            _authOptions = authOptions;
         }
 
-        public async Task<string> Login(UserModel userModel)
+        public async Task<UserModel> AuthenticateUser(UserModel userModel)
         {
             var userEntity = await _userRepository.QueryFirst(u => u.Email == userModel.Email);
 
-            if (userEntity == null || !(await PasswordVerify(userModel.Password, userEntity.PasswordHash)))
-                throw new ArgumentException("Username or password is incorrect");
+            if (!(await PasswordVerify(userModel.Password, userEntity.PasswordHash)))
+                userEntity = null;
 
-            string token = CreateToken(userModel);
-
-            return token;
+            return _mapper.Map<UserModel>(userEntity);
         }
 
         public async Task<UserModel> Register(UserModel model)
@@ -58,6 +60,11 @@ namespace PawsitivelyCare.BLL.Services.Realizations
             var user = await _userRepository.GetAsync(id);
 
             return _mapper.Map<UserModel>(user);
+        }
+
+        public async Task<UserModel> GetByEmail(string email)
+        {
+            return _mapper.Map<UserModel>(await _userRepository.QueryFirst(u => u.Email == email));
         }
 
         public async Task Update(UserModel userModel)
@@ -83,27 +90,27 @@ namespace PawsitivelyCare.BLL.Services.Realizations
             await _userRepository.DeleteAsync(userEntity);
         }
 
-        private string CreateToken(UserModel userModel)
+        public async Task<string> GenerateJwtToken(UserModel userModel)
         {
-            List<Claim> claims = new List<Claim>
+            var authParams = _authOptions.Value;
+
+            var securityKey = authParams.GetSymmetricSecurityKey();
+            var credentials =  new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var claims = new List<Claim>()
             {
-                new Claim(ClaimTypes.Email, userModel.Email)
+                new Claim(JwtRegisteredClaimNames.Email, userModel.Email),
+                new Claim(JwtRegisteredClaimNames.Sub, userModel.Id.ToString())
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                _configuration.GetSection("AppSettings:Token").Value!));
-
-            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-
             var token = new JwtSecurityToken(
-                claims: claims,
-                expires: DateTime.Now.AddDays(5),
-                signingCredentials: credentials
-                );
+                authParams.Issuer, 
+                authParams.Audience,
+                claims,
+                expires: DateTime.Now.AddDays(authParams.TokenLifeTime),
+                signingCredentials: credentials);
 
-            var jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
-
-            return jwtToken;
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
         private async Task<string> HashPasswordAsync(string password)

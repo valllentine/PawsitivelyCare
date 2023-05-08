@@ -12,7 +12,7 @@ using PawsitivelyCare.DAL.Contexts;
 namespace PawsitivelyCare.DAL.Migrations
 {
     [DbContext(typeof(PawsitivelyCareDbContext))]
-    [Migration("20230506152852_Initial")]
+    [Migration("20230507184733_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -98,6 +98,9 @@ namespace PawsitivelyCare.DAL.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid>("CreatorId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("PostTypeId")
                         .HasColumnType("uniqueidentifier");
 
@@ -106,9 +109,14 @@ namespace PawsitivelyCare.DAL.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("PostTypeId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Posts", (string)null);
                 });
@@ -126,21 +134,6 @@ namespace PawsitivelyCare.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("PostTypes", (string)null);
-                });
-
-            modelBuilder.Entity("PawsitivelyCare.DAL.Entities.Role", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("RoleName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("PawsitivelyCare.DAL.Entities.User", b =>
@@ -174,21 +167,6 @@ namespace PawsitivelyCare.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users", (string)null);
-                });
-
-            modelBuilder.Entity("RoleUser", b =>
-                {
-                    b.Property<Guid>("RolesId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UsersId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("RolesId", "UsersId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("RoleUser");
                 });
 
             modelBuilder.Entity("ChatUser", b =>
@@ -233,22 +211,15 @@ namespace PawsitivelyCare.DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("PawsitivelyCare.DAL.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("PostType");
-                });
 
-            modelBuilder.Entity("RoleUser", b =>
-                {
-                    b.HasOne("PawsitivelyCare.DAL.Entities.Role", null)
-                        .WithMany()
-                        .HasForeignKey("RolesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PawsitivelyCare.DAL.Entities.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("PawsitivelyCare.DAL.Entities.Chat", b =>

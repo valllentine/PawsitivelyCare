@@ -32,8 +32,16 @@ namespace PawsitivelyCare.Controllers
         public async Task<ActionResult> Login(LoginUserDto userDto)
         {
             var userModel = _mapper.Map<UserModel>(userDto);
-            var token = await _userService.Login(userModel);
-            return Ok(token);
+            var user = await _userService.AuthenticateUser(userModel);
+
+            if (user != null)
+            {
+                var token = _userService.GenerateJwtToken(user);
+
+                return Ok(new { token });
+            }
+
+            return Unauthorized();
         }
 
         [AllowAnonymous]

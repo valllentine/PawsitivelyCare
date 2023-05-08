@@ -1,18 +1,23 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PawsitivelyCare.BLL.Models;
 using PawsitivelyCare.BLL.Services.Interfaces;
 using PawsitivelyCare.DTOs.Post;
+using System.Security.Claims;
 
 namespace PawsitivelyCare.Controllers
 {
 
     [ApiController]
+    [Authorize]
     [Route("api/posts/")]
     public class PostsController : ControllerBase
     {
         private readonly IMapper _mapper;
         private readonly IPostService _postService;
+
+        private Guid UserId => Guid.Parse(User.Claims.Single(c=>c.Type == ClaimTypes.NameIdentifier).Value);
 
         public PostsController(IMapper mapper, IPostService postService)
         {
@@ -20,10 +25,17 @@ namespace PawsitivelyCare.Controllers
             _postService = postService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult> GetPost([FromQuery] Guid id)
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetPost(Guid id)
         {
             var post = await _postService.GetPost(id);
+            return Ok(post);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetPostsList()
+        {
+            var post = await _postService.GetPostsList(UserId);
             return Ok(post);
         }
 

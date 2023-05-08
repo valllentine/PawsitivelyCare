@@ -15,6 +15,7 @@ namespace PawsitivelyCare.DAL.EntityConfiguration
             builder.Property(x => x.Content).IsRequired().HasMaxLength(5000);
             builder.Property(x => x.CreatedAt).IsRequired();
             builder.Property(x => x.PostTypeId).IsRequired();
+            builder.Property(x => x.CreatorId).IsRequired();
 
             builder.ToTable("Posts");
         }

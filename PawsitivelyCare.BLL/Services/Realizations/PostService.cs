@@ -33,6 +33,14 @@ namespace PawsitivelyCare.BLL.Services.Realizations
             return _mapper.Map<PostModel>(User);
         }
 
+        public async Task<List<PostModel>> GetPostsList(Guid userId)
+        {
+            return _mapper.Map<List<PostModel>>(await _postRepository.Query(
+                p => p.CreatorId == userId,
+                orderBy: p=>p.OrderByDescending(d=>d.CreatedAt)));
+        }
+
+
         public async Task UpdatePost(PostModel postModel)
         {
             var postEntity = _mapper.Map<Post>(postModel);

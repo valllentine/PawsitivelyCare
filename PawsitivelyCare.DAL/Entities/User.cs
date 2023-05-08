@@ -8,8 +8,6 @@
         public string Email { get; set; }
         public string PasswordHash { get; set; }
         public DateTime CreatedAt { get; set; }
-
-        public virtual ICollection<Role> Roles { get; set; }
         public virtual ICollection<Chat> Chats { get; set; }
     }
 }

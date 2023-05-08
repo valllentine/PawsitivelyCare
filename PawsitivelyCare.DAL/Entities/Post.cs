@@ -7,7 +7,9 @@
         public string Content { get; set; }
         public DateTime CreatedAt { get; set; }
         public Guid PostTypeId { get; set; }
+        public Guid CreatorId { get; set; }
 
         public virtual PostType PostType { get; set; }
+        public virtual User User { get; set; }
     }
 }
