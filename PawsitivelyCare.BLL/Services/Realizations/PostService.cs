@@ -36,7 +36,7 @@ namespace PawsitivelyCare.BLL.Services.Realizations
         public async Task<List<PostModel>> GetPostsList(Guid userId)
         {
             return _mapper.Map<List<PostModel>>(await _postRepository.Query(
-                p => p.CreatorId == userId,
+                p => p.UserId == userId,
                 orderBy: p=>p.OrderByDescending(d=>d.CreatedAt)));
         }
 

@@ -90,7 +90,7 @@ namespace PawsitivelyCare.BLL.Services.Realizations
             await _userRepository.DeleteAsync(userEntity);
         }
 
-        public async Task<string> GenerateJwtToken(UserModel userModel)
+        public string GenerateJwtToken(UserModel userModel)
         {
             var authParams = _authOptions.Value;
 
