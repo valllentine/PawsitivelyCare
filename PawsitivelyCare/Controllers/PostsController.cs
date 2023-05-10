@@ -5,6 +5,7 @@ using PawsitivelyCare.BLL.Models;
 using PawsitivelyCare.BLL.Services.Interfaces;
 using PawsitivelyCare.DTOs.Post;
 using System.Security.Claims;
+using static PawsitivelyCare.DAL.Entities.Post;
 
 namespace PawsitivelyCare.Controllers
 {
@@ -32,22 +33,31 @@ namespace PawsitivelyCare.Controllers
             return Ok(post);
         }
 
-        [HttpGet]
-        public async Task<ActionResult> GetPostsList()
+        [HttpGet("myPosts")]
+        public async Task<ActionResult<List<PostModel>>> GetUserPosts()
         {
-            var post = await _postService.GetPostsList(UserId);
-            return Ok(post);
+            var posts = await _postService.GetUserPosts(UserId);
+            return Ok(posts);
+        }
+
+        [HttpGet("{type}/{category}/{location}")]
+        public async Task<ActionResult> GetPosts(PostType? type = null, int? category = null, string? location = null)
+        {
+            //var posts = await _postService.GetPosts(type, category, location);
+            return Ok();
         }
 
         [HttpPost("create")]
         public async Task<ActionResult> CreatePost(CreatePostDto postDto)
         {
             var postModel = _mapper.Map<PostModel>(postDto);
+            postModel.CreatorId = UserId;
             var createdPost = await _postService.CreatePost(postModel);
+
             return Ok(new { message = "Creation successful", createdPost });
         }
 
-        [HttpPut("update/{id}")]
+        [HttpPost("edit/{id}")]
         public async Task<ActionResult<int>> UpdatePost(Guid id, [FromBody] UpdatePostDto postDto)
         {
             var postModel = await _postService.GetPost(id);

@@ -14,8 +14,14 @@ namespace PawsitivelyCare.DAL.EntityConfiguration
             builder.Property(x => x.Title).IsRequired().HasMaxLength(100);
             builder.Property(x => x.Content).IsRequired().HasMaxLength(5000);
             builder.Property(x => x.CreatedAt).IsRequired();
-            builder.Property(x => x.PostTypeId).IsRequired();
+            builder.Property(x => x.Type).IsRequired().HasConversion<int>();
+            builder.Property(x => x.PostCategoryId).IsRequired();
             builder.Property(x => x.CreatorId).IsRequired();
+
+            builder.HasMany(x => x.Comments)
+               .WithOne(w => w.Post)
+               .HasForeignKey(x => x.PostId)
+               .OnDelete(DeleteBehavior.Cascade);
 
             builder.ToTable("Posts");
         }

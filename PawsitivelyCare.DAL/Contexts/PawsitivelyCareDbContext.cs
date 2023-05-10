@@ -14,15 +14,25 @@ namespace PawsitivelyCare.DAL.Contexts
         public DbSet<Chat> Chats { get; set; }
         public DbSet<ChatMessage> ChatMessages { get; set; }
         public DbSet<Post> Posts { get; set; }
-        public DbSet<PostType> PostTypes { get; set; }
+        public DbSet<PostCategory> PostCategories { get; set; }
+        public DbSet<Comment> Comments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new ChatConfiguration());
             modelBuilder.ApplyConfiguration(new ChatMessageConfiguration());
             modelBuilder.ApplyConfiguration(new PostConfiguration());
-            modelBuilder.ApplyConfiguration(new PostTypeConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
+            modelBuilder.ApplyConfiguration(new PostCategoryConfiguration());
+            modelBuilder.ApplyConfiguration(new CommentConfiguration());
+
+            modelBuilder.Entity<User>()
+                .HasMany(f => f.Chats)
+                .WithMany(g => g.Users)
+                .UsingEntity<Dictionary<string, object>>(
+                    "ChatUser",
+                        j => j.HasOne<Chat>().WithMany().OnDelete(DeleteBehavior.Cascade),
+                        j => j.HasOne<User>().WithMany().OnDelete(DeleteBehavior.NoAction));
 
             modelBuilder.Entity<User>()
                 .HasMany(u => u.Chats)

@@ -36,6 +36,8 @@ builder.Services.AddScoped<IBaseRepository<Post, Guid>, BaseRepository<Post, Gui
 
 #region "MapperProfiles"
 
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 builder.Services.AddAutoMapper(typeof(UserProfile));
 builder.Services.AddAutoMapper(typeof(PostProfile));
 
@@ -67,6 +69,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 #endregion Region
+
 
 #region "Swagger"
 
@@ -104,16 +107,12 @@ builder.Services.AddSwaggerGen(c=>
     });
 });
 
-
 #endregion Region
 
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
+#region "Cors"
 
 builder.Services.AddAuthorization();
-
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddCors(options =>
 {
@@ -121,11 +120,16 @@ builder.Services.AddCors(options =>
     {
         builder.AllowAnyOrigin()
                .AllowAnyMethod()
-               .AllowAnyHeader();
+               .AllowAnyHeader()
+               .WithMethods("PUT");
     });
 });
 
+#endregion Region
 
+
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
 

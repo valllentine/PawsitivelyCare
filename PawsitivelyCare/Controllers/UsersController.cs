@@ -53,6 +53,7 @@ namespace PawsitivelyCare.Controllers
             return Ok(new { message = "Registration successful", createdUser });
         }
 
+        [Authorize]
         [HttpPut("update/{id}")]
         public async Task<ActionResult<int>> Update(Guid id, [FromBody] UpdateUserDto userDto)
         {

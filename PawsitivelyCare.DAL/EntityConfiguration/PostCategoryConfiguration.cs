@@ -4,16 +4,16 @@ using PawsitivelyCare.DAL.Entities;
 
 namespace PawsitivelyCare.DAL.EntityConfiguration
 {
-    public class PostTypeConfiguration : IEntityTypeConfiguration<PostType>
+    public class PostCategoryConfiguration : IEntityTypeConfiguration<PostCategory>
     {
-        public void Configure(EntityTypeBuilder<PostType> builder)
+        public void Configure(EntityTypeBuilder<PostCategory> builder)
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).IsRequired().ValueGeneratedOnAdd();
 
-            builder.Property(x => x.Type).IsRequired();
+            builder.Property(x => x.Category).IsRequired().HasMaxLength(50);
 
-            builder.ToTable("PostTypes");
+            builder.ToTable("PostCategories");
         }
     }
 }

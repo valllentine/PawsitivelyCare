@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using static PawsitivelyCare.DAL.Entities.User;
 
 namespace PawsitivelyCare.DTOs.User
 {
@@ -13,6 +14,13 @@ namespace PawsitivelyCare.DTOs.User
         [Required]
         [EmailAddress]
         public string Email { get; set; }
+
+        [Required]
+        //[Phone]
+        public string Phone { get; set; }
+
+        [Required]
+        public UserGender Gender { get; set; }
 
         [Required]
         public string Password { get; set; }

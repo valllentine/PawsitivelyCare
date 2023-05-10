@@ -1,5 +1,6 @@
 ﻿
 using PawsitivelyCare.BLL.Models;
+using static PawsitivelyCare.DAL.Entities.Post;
 
 namespace PawsitivelyCare.BLL.Services.Interfaces
 {
@@ -7,7 +8,8 @@ namespace PawsitivelyCare.BLL.Services.Interfaces
     {
         Task<PostModel> CreatePost(PostModel PostModel);
         Task<PostModel> GetPost(Guid id);
-        Task<List<PostModel>> GetPostsList(Guid userId);
+        Task<List<PostModel>> GetUserPosts(Guid userId);
+        Task<List<PostModel>> GetPosts(PostType type, int category, string location);
         Task UpdatePost(PostModel PostModel);
         Task DeletePost(Guid id);
     }

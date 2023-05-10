@@ -12,6 +12,7 @@ namespace PawsitivelyCare.DAL.EntityConfiguration
             builder.Property(x => x.Id).IsRequired().ValueGeneratedOnAdd();
 
             builder.Property(x => x.Name).IsRequired().HasMaxLength(50);
+            builder.Property(x => x.PostId).IsRequired();
 
             builder.HasMany(x => x.Messages)
                 .WithOne(w => w.Chat)
