@@ -10,6 +10,6 @@ namespace PawsitivelyCare.BLL.Services.Interfaces
         Task<UserModel> GetByEmail(string email);
         Task Update(UserModel userModel);
         Task Delete(Guid id);
-        Task<string> GenerateJwtToken(UserModel userModel);
+        string GenerateJwtToken(UserModel userModel);
     }
 }

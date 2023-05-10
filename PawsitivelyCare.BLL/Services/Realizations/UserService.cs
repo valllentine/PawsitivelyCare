@@ -30,12 +30,14 @@ namespace PawsitivelyCare.BLL.Services.Realizations
             _authOptions = authOptions;
         }
 
-        public async Task<UserModel> AuthenticateUser(UserModel userModel)
+        public async Task<UserModel?> AuthenticateUser(UserModel userModel)
         {
             var userEntity = await _userRepository.QueryFirst(u => u.Email == userModel.Email);
 
-            if (!(await PasswordVerify(userModel.Password, userEntity.PasswordHash)))
-                userEntity = null;
+            if(userEntity == null || !(await PasswordVerify(userModel.Password, userEntity.PasswordHash))) 
+            { 
+                return null; 
+            }
 
             return _mapper.Map<UserModel>(userEntity);
         }
