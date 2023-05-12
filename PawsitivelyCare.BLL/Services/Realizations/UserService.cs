@@ -70,14 +70,18 @@ namespace PawsitivelyCare.BLL.Services.Realizations
         }
 
         public async Task Update(UserModel userModel)
-        {
-            if (await _userRepository.QueryFirst(u => u.Email == userModel.Email) != null)
+            {
+            var userEntityFromDb = await _userRepository.QueryFirst(u => u.Email == userModel.Email);
+
+            if (userEntityFromDb != null && userEntityFromDb.Id != userModel.Id)
                 throw new ArgumentException("Email '" + userModel.Email + "'  already exist");
 
             var userEntity = _mapper.Map<User>(userModel);
 
             if (!string.IsNullOrEmpty(userModel.Password))
                 userEntity.PasswordHash = await HashPasswordAsync(userModel.Password);
+            else
+                userEntity.PasswordHash = userEntityFromDb.PasswordHash;
 
             await _userRepository.UpdateAsync(userEntity);
         }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using PawsitivelyCare.BLL.Models;
 using PawsitivelyCare.BLL.Services.Interfaces;
 using PawsitivelyCare.DTOs.User;
+using System.Security.Claims;
 
 namespace PawsitivelyCare.Controllers
 {
@@ -14,6 +15,8 @@ namespace PawsitivelyCare.Controllers
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
 
+        private Guid UserId => Guid.Parse(User.Claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
         public UsersController(IMapper mapper, IUserService userService)
         {
             _mapper = mapper;
@@ -21,9 +24,9 @@ namespace PawsitivelyCare.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetUser([FromQuery] Guid id)
+        public async Task<ActionResult> GetUser()
         {
-            var user = await _userService.Get(id);
+            var user = await _userService.Get(UserId);
             return Ok(user);
         }
 
@@ -54,10 +57,10 @@ namespace PawsitivelyCare.Controllers
         }
 
         [Authorize]
-        [HttpPut("update/{id}")]
-        public async Task<ActionResult<int>> Update(Guid id, [FromBody] UpdateUserDto userDto)
+        [HttpPost("update")]
+        public async Task<ActionResult<int>> Update([FromBody] UpdateUserDto userDto)
         {
-            var userModel = await _userService.Get(id);
+            var userModel = await _userService.Get(UserId);
 
             if (userModel == null)
                 return NotFound();

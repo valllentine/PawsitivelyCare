@@ -26,12 +26,12 @@ namespace PawsitivelyCare.Controllers
             _postService = postService;
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult> GetPost(Guid id)
-        {
-            var post = await _postService.GetPost(id);
-            return Ok(post);
-        }
+        //[HttpGet("{id}")]
+        //public async Task<ActionResult> GetPost(Guid id)
+        //{
+        //    var post = await _postService.GetPost(id);
+        //    return Ok(post);
+        //}
 
         [HttpGet("myPosts")]
         public async Task<ActionResult<List<PostModel>>> GetUserPosts()
@@ -40,11 +40,11 @@ namespace PawsitivelyCare.Controllers
             return Ok(posts);
         }
 
-        [HttpGet("{type}/{category}/{location}")]
-        public async Task<ActionResult> GetPosts(PostType? type = null, int? category = null, string? location = null)
+        [HttpGet("")]
+        public async Task<ActionResult> GetPosts([FromQuery] PostType type, [FromQuery] int category, [FromQuery] string? location = null)
         {
-            //var posts = await _postService.GetPosts(type, category, location);
-            return Ok();
+            var posts = await _postService.GetPosts(type, category, location, UserId);
+            return Ok(posts);
         }
 
         [HttpPost("create")]

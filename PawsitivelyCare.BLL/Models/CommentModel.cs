@@ -1,6 +1,6 @@
 ﻿namespace PawsitivelyCare.BLL.Models
 {
-    public interface CommentModel
+    public class CommentModel
     {
         public Guid Id { get; set; }
         public string Text { get; set; }

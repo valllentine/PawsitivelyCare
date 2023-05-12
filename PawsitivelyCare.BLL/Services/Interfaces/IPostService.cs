@@ -9,7 +9,7 @@ namespace PawsitivelyCare.BLL.Services.Interfaces
         Task<PostModel> CreatePost(PostModel PostModel);
         Task<PostModel> GetPost(Guid id);
         Task<List<PostModel>> GetUserPosts(Guid userId);
-        Task<List<PostModel>> GetPosts(PostType type, int category, string location);
+        Task<List<PostModel>> GetPosts(PostType type, int? category, string? location, Guid userId);
         Task UpdatePost(PostModel PostModel);
         Task DeletePost(Guid id);
     }

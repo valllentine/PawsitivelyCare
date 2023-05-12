@@ -42,17 +42,15 @@ namespace PawsitivelyCare.BLL.Services.Realizations
                 orderBy: p=>p.OrderByDescending(d=>d.CreatedAt)));
         }
 
-        public async Task<List<PostModel>> GetPosts(PostType type, int category, string location)
+        public async Task<List<PostModel>> GetPosts(PostType type, int? category, string? location, Guid userId)
         {
-            category = default;
-            location = default;
             return _mapper.Map<List<PostModel>>(await _postRepository.Query(
                 p => p.Type == type &&
-                p.PostCategoryId == category &&
-                p.Location == location,
+                (category == 0 || (p.PostCategoryId == category)) &&
+                (location == null || (p.Location == location)) &&
+                (p.CreatorId != userId),
                 orderBy: p => p.OrderByDescending(d => d.CreatedAt)));
         }
-
 
         public async Task UpdatePost(PostModel postModel)
         {
