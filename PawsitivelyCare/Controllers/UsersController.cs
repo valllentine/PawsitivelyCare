@@ -57,7 +57,7 @@ namespace PawsitivelyCare.Controllers
         }
 
         [Authorize]
-        [HttpPost("update")]
+        [HttpPut]
         public async Task<ActionResult<int>> Update([FromBody] UpdateUserDto userDto)
         {
             var userModel = await _userService.Get(UserId);

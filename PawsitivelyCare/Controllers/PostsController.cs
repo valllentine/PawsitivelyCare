@@ -26,12 +26,12 @@ namespace PawsitivelyCare.Controllers
             _postService = postService;
         }
 
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult> GetPost(Guid id)
-        //{
-        //    var post = await _postService.GetPost(id);
-        //    return Ok(post);
-        //}
+        [HttpGet]
+        public async Task<ActionResult> GetPosts([FromQuery] PostType type, [FromQuery] int category, [FromQuery] string? location = null)
+        {
+            var posts = await _postService.GetPosts(type, category, location, UserId);
+            return Ok(posts);
+        }
 
         [HttpGet("myPosts")]
         public async Task<ActionResult<List<PostModel>>> GetUserPosts()
@@ -40,14 +40,14 @@ namespace PawsitivelyCare.Controllers
             return Ok(posts);
         }
 
-        [HttpGet("")]
-        public async Task<ActionResult> GetPosts([FromQuery] PostType type, [FromQuery] int category, [FromQuery] string? location = null)
+        [HttpGet("postInfo")]
+        public async Task<ActionResult> GetPost([FromQuery] Guid postId)
         {
-            var posts = await _postService.GetPosts(type, category, location, UserId);
-            return Ok(posts);
+            var post = await _postService.GetPost(postId);
+            return Ok(post);
         }
 
-        [HttpPost("create")]
+        [HttpPost]
         public async Task<ActionResult> CreatePost(CreatePostDto postDto)
         {
             var postModel = _mapper.Map<PostModel>(postDto);
@@ -57,7 +57,7 @@ namespace PawsitivelyCare.Controllers
             return Ok(new { message = "Creation successful", createdPost });
         }
 
-        [HttpPost("edit/{id}")]
+        [HttpPut("{id}")]
         public async Task<ActionResult<int>> UpdatePost(Guid id, [FromBody] UpdatePostDto postDto)
         {
             var postModel = await _postService.GetPost(id);

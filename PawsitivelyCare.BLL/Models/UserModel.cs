@@ -11,6 +11,7 @@ namespace PawsitivelyCare.BLL.Models
         public string Phone { get; set; }
         public UserGender Gender { get; set; }
         public string Password { get; set; }
+        public string PasswordHash { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

@@ -7,7 +7,7 @@ namespace PawsitivelyCare.DAL.Repositories.Realizations
 {
     public class BaseRepository<TEntity, TKey> : IBaseRepository<TEntity, TKey> where TEntity : class //abstract??
     {
-        private readonly IDbContextFactory<PawsitivelyCareDbContext> _contextFactory;
+        protected readonly IDbContextFactory<PawsitivelyCareDbContext> _contextFactory;
 
         public BaseRepository(IDbContextFactory<PawsitivelyCareDbContext> contextFactory)
         {

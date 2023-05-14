@@ -22,6 +22,8 @@ builder.Services.AddDbContextFactory<PawsitivelyCareDbContext>(
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddScoped<IChatService, ChatService>();
 
 #endregion Region
 
@@ -30,6 +32,11 @@ builder.Services.AddScoped<IPostService, PostService>();
 
 builder.Services.AddScoped<IBaseRepository<User, Guid>, BaseRepository<User, Guid>>();
 builder.Services.AddScoped<IBaseRepository<Post, Guid>, BaseRepository<Post, Guid>>();
+builder.Services.AddScoped<IBaseRepository<Comment, Guid>, BaseRepository<Comment, Guid>>();
+builder.Services.AddScoped<IBaseRepository<Chat, Guid>, BaseRepository<Chat, Guid>>();
+builder.Services.AddScoped<IBaseRepository<ChatMessage, Guid>, BaseRepository<ChatMessage, Guid>>();
+builder.Services.AddScoped<IChatRepository, ChatRepository>();
+
 
 #endregion Region
 
@@ -40,6 +47,9 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddAutoMapper(typeof(UserProfile));
 builder.Services.AddAutoMapper(typeof(PostProfile));
+builder.Services.AddAutoMapper(typeof(CommentProfile));
+builder.Services.AddAutoMapper(typeof(ChatProfile));
+builder.Services.AddAutoMapper(typeof(ChatMessageProfile));
 
 #endregion Region
 
@@ -77,7 +87,7 @@ builder.Services.AddSwaggerGen(c=>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "jwtTocken_Auth_Api",
+        Title = "PawsitivalyCare_Api",
         Version = "v1"
     });
 
