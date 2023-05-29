@@ -48,7 +48,12 @@ namespace PawsitivelyCare.DAL.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("PostId");
 
                     b.ToTable("Chats", (string)null);
                 });
@@ -81,6 +86,54 @@ namespace PawsitivelyCare.DAL.Migrations
                     b.ToTable("ChatMessages", (string)null);
                 });
 
+            modelBuilder.Entity("PawsitivelyCare.DAL.Entities.Comment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SenderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("Comments", (string)null);
+                });
+
+            modelBuilder.Entity("PawsitivelyCare.DAL.Entities.Image", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("Images", (string)null);
+                });
+
             modelBuilder.Entity("PawsitivelyCare.DAL.Entities.Post", b =>
                 {
                     b.Property<Guid>("Id")
@@ -98,39 +151,46 @@ namespace PawsitivelyCare.DAL.Migrations
                     b.Property<Guid>("CreatorId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("PostTypeId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PostCategoryId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PostTypeId");
+                    b.HasIndex("CreatorId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("PostCategoryId");
 
                     b.ToTable("Posts", (string)null);
                 });
 
-            modelBuilder.Entity("PawsitivelyCare.DAL.Entities.PostType", b =>
+            modelBuilder.Entity("PawsitivelyCare.DAL.Entities.PostCategory", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
 
-                    b.Property<string>("Type")
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Category")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("PostTypes", (string)null);
+                    b.ToTable("PostCategories", (string)null);
                 });
 
             modelBuilder.Entity("PawsitivelyCare.DAL.Entities.User", b =>
@@ -147,12 +207,19 @@ namespace PawsitivelyCare.DAL.Migrations
                         .HasMaxLength(254)
                         .HasColumnType("nvarchar(254)");
 
+                    b.Property<int>("Gender")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -177,8 +244,19 @@ namespace PawsitivelyCare.DAL.Migrations
                     b.HasOne("PawsitivelyCare.DAL.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PawsitivelyCare.DAL.Entities.Chat", b =>
+                {
+                    b.HasOne("PawsitivelyCare.DAL.Entities.Post", "Post")
+                        .WithMany()
+                        .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Post");
                 });
 
             modelBuilder.Entity("PawsitivelyCare.DAL.Entities.ChatMessage", b =>
@@ -190,9 +268,9 @@ namespace PawsitivelyCare.DAL.Migrations
                         .IsRequired();
 
                     b.HasOne("PawsitivelyCare.DAL.Entities.User", "Sender")
-                        .WithMany()
+                        .WithMany("ChatMessages")
                         .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Chat");
@@ -200,23 +278,53 @@ namespace PawsitivelyCare.DAL.Migrations
                     b.Navigation("Sender");
                 });
 
+            modelBuilder.Entity("PawsitivelyCare.DAL.Entities.Comment", b =>
+                {
+                    b.HasOne("PawsitivelyCare.DAL.Entities.Post", "Post")
+                        .WithMany("Comments")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PawsitivelyCare.DAL.Entities.User", "Sender")
+                        .WithMany("Comments")
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Post");
+
+                    b.Navigation("Sender");
+                });
+
+            modelBuilder.Entity("PawsitivelyCare.DAL.Entities.Image", b =>
+                {
+                    b.HasOne("PawsitivelyCare.DAL.Entities.Post", "Post")
+                        .WithMany()
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
+                });
+
             modelBuilder.Entity("PawsitivelyCare.DAL.Entities.Post", b =>
                 {
-                    b.HasOne("PawsitivelyCare.DAL.Entities.PostType", "PostType")
-                        .WithMany("Posts")
-                        .HasForeignKey("PostTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PawsitivelyCare.DAL.Entities.User", "User")
+                    b.HasOne("PawsitivelyCare.DAL.Entities.User", "Creator")
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("CreatorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("PostType");
+                    b.HasOne("PawsitivelyCare.DAL.Entities.PostCategory", "PostCategory")
+                        .WithMany("Posts")
+                        .HasForeignKey("PostCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("Creator");
+
+                    b.Navigation("PostCategory");
                 });
 
             modelBuilder.Entity("PawsitivelyCare.DAL.Entities.Chat", b =>
@@ -224,9 +332,21 @@ namespace PawsitivelyCare.DAL.Migrations
                     b.Navigation("Messages");
                 });
 
-            modelBuilder.Entity("PawsitivelyCare.DAL.Entities.PostType", b =>
+            modelBuilder.Entity("PawsitivelyCare.DAL.Entities.Post", b =>
+                {
+                    b.Navigation("Comments");
+                });
+
+            modelBuilder.Entity("PawsitivelyCare.DAL.Entities.PostCategory", b =>
                 {
                     b.Navigation("Posts");
+                });
+
+            modelBuilder.Entity("PawsitivelyCare.DAL.Entities.User", b =>
+                {
+                    b.Navigation("ChatMessages");
+
+                    b.Navigation("Comments");
                 });
 #pragma warning restore 612, 618
         }

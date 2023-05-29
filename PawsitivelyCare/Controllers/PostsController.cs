@@ -40,21 +40,36 @@ namespace PawsitivelyCare.Controllers
             return Ok(posts);
         }
 
-        [HttpGet("postInfo")]
-        public async Task<ActionResult> GetPost([FromQuery] Guid postId)
+        [HttpGet("{id:guid}")]
+        public async Task<ActionResult> GetPost(Guid id)
         {
-            var post = await _postService.GetPost(postId);
+            var post = await _postService.GetPost(id);
             return Ok(post);
         }
 
-        [HttpPost]
-        public async Task<ActionResult> CreatePost(CreatePostDto postDto)
+        [HttpGet("{postId:guid}/images")]
+        public async Task<ActionResult> GetPostImages(Guid postId)
         {
-            var postModel = _mapper.Map<PostModel>(postDto);
-            postModel.CreatorId = UserId;
-            var createdPost = await _postService.CreatePost(postModel);
+            var imagePaths = await _postService.GetPostImages(postId);
 
-            return Ok(new { message = "Creation successful", createdPost });
+            if (imagePaths.Count == 0)
+            {
+                return Ok(imagePaths);
+            }
+
+            return Ok(imagePaths);
+        }
+
+        [HttpPost("{postId:guid}/images")]
+        public async Task<ActionResult> UploadImages(List<string> images, Guid postId)
+        {
+            if (images == null || images.Count == 0) 
+            { 
+                return BadRequest("Could not upload images"); 
+            }
+
+            await _postService.UploadImages(images, postId);
+            return Ok();
         }
 
         [HttpPut("{id}")]
@@ -69,6 +84,16 @@ namespace PawsitivelyCare.Controllers
             await _postService.UpdatePost(postModel);
 
             return Ok(new { message = "Post updated successfully" });
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> CreatePost(CreatePostDto postDto)
+        {
+            var postModel = _mapper.Map<PostModel>(postDto);
+            postModel.CreatorId = UserId;
+            var createdPost = await _postService.CreatePost(postModel);
+
+            return Ok(createdPost);
         }
 
         [HttpDelete("{id}")]

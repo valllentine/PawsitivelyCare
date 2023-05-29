@@ -1,5 +1,10 @@
 ﻿
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using PawsitivelyCare.BLL.Common.Auth;
+using PawsitivelyCare.BLL.Common.Images;
 using PawsitivelyCare.BLL.Models;
 using PawsitivelyCare.BLL.Services.Interfaces;
 using PawsitivelyCare.DAL.Entities;
@@ -11,11 +16,16 @@ namespace PawsitivelyCare.BLL.Services.Realizations
     public class PostService : IPostService
     {
         private readonly IBaseRepository<Post, Guid> _postRepository;
+        private readonly IBaseRepository<Image, Guid> _imageRepository;
+        private readonly IOptions<ImageSettings> _imageSettings;
         protected readonly IMapper _mapper;
 
-        public PostService(IBaseRepository<Post, Guid> postRepository, IMapper mapper)
+        public PostService(IBaseRepository<Post, Guid> postRepository, IBaseRepository<Image, Guid> imageRepository, 
+                           IOptions<ImageSettings> imageSettingsOptions, IMapper mapper)
         {
             _postRepository = postRepository;
+            _imageRepository = imageRepository;
+            _imageSettings = imageSettingsOptions;
             _mapper = mapper;
         }
 
@@ -52,6 +62,33 @@ namespace PawsitivelyCare.BLL.Services.Realizations
                 orderBy: p => p.OrderByDescending(d => d.CreatedAt)));
         }
 
+        public async Task<List<string>> GetPostImages(Guid postId)
+        {
+            var postImages = _mapper.Map<List<ImageModel>>(await _imageRepository.Query(i => i.PostId == postId));
+
+            var imagePaths = new List<string>();
+            foreach (var image in postImages)
+            {
+                imagePaths.Add(image.FileName);
+            }
+
+            return imagePaths;
+        }
+
+        public async Task UploadImages(List<string> images, Guid postId)
+        {
+            foreach (var image in images)
+            {
+                var imageEntity = new Image
+                {
+                    FileName = image,
+                    PostId = postId
+                };
+
+                await _imageRepository.AddAsync(imageEntity);
+            }
+        }
+
         public async Task UpdatePost(PostModel postModel)
         {
             var postEntity = _mapper.Map<Post>(postModel);
@@ -67,6 +104,12 @@ namespace PawsitivelyCare.BLL.Services.Realizations
                 throw new ArgumentException($"User with the id '{id}' could not be found.");
 
             await _postRepository.DeleteAsync(postEntity);
+        }
+
+        private string getImagesUploadsFolder()
+        {
+            var imageParams = _imageSettings.Value;
+            return Path.Combine(imageParams.UploadFolderPath, "Uploads");
         }
     }
 }

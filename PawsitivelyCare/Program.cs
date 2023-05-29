@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using PawsitivelyCare.BLL.Common.Auth;
+using PawsitivelyCare.BLL.Common.Images;
 using PawsitivelyCare.BLL.Services.Interfaces;
 using PawsitivelyCare.BLL.Services.Realizations;
 using PawsitivelyCare.DAL.Contexts;
@@ -9,6 +10,7 @@ using PawsitivelyCare.DAL.Entities;
 using PawsitivelyCare.DAL.Repositories.Interfaces;
 using PawsitivelyCare.DAL.Repositories.Realizations;
 using PawsitivelyCare.Mappings;
+using static CSharpFunctionalExtensions.Result;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +37,7 @@ builder.Services.AddScoped<IBaseRepository<Post, Guid>, BaseRepository<Post, Gui
 builder.Services.AddScoped<IBaseRepository<Comment, Guid>, BaseRepository<Comment, Guid>>();
 builder.Services.AddScoped<IBaseRepository<Chat, Guid>, BaseRepository<Chat, Guid>>();
 builder.Services.AddScoped<IBaseRepository<ChatMessage, Guid>, BaseRepository<ChatMessage, Guid>>();
+builder.Services.AddScoped<IBaseRepository<Image, Guid>, BaseRepository<Image, Guid>>();
 builder.Services.AddScoped<IChatRepository, ChatRepository>();
 
 
@@ -80,6 +83,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 #endregion Region
 
+builder.Services.Configure<ImageSettings>(builder.Configuration.GetSection("ImageSettings"));
 
 #region "Swagger"
 
