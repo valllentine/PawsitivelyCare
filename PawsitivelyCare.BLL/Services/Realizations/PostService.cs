@@ -1,10 +1,5 @@
 ﻿
 using AutoMapper;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using PawsitivelyCare.BLL.Common.Auth;
-using PawsitivelyCare.BLL.Common.Images;
 using PawsitivelyCare.BLL.Models;
 using PawsitivelyCare.BLL.Services.Interfaces;
 using PawsitivelyCare.DAL.Entities;
@@ -17,15 +12,12 @@ namespace PawsitivelyCare.BLL.Services.Realizations
     {
         private readonly IBaseRepository<Post, Guid> _postRepository;
         private readonly IBaseRepository<Image, Guid> _imageRepository;
-        private readonly IOptions<ImageSettings> _imageSettings;
         protected readonly IMapper _mapper;
 
-        public PostService(IBaseRepository<Post, Guid> postRepository, IBaseRepository<Image, Guid> imageRepository, 
-                           IOptions<ImageSettings> imageSettingsOptions, IMapper mapper)
+        public PostService(IBaseRepository<Post, Guid> postRepository, IBaseRepository<Image, Guid> imageRepository, IMapper mapper)
         {
             _postRepository = postRepository;
             _imageRepository = imageRepository;
-            _imageSettings = imageSettingsOptions;
             _mapper = mapper;
         }
 
@@ -104,12 +96,6 @@ namespace PawsitivelyCare.BLL.Services.Realizations
                 throw new ArgumentException($"User with the id '{id}' could not be found.");
 
             await _postRepository.DeleteAsync(postEntity);
-        }
-
-        private string getImagesUploadsFolder()
-        {
-            var imageParams = _imageSettings.Value;
-            return Path.Combine(imageParams.UploadFolderPath, "Uploads");
         }
     }
 }

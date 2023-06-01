@@ -12,6 +12,7 @@ namespace PawsitivelyCare.Mappings
             CreateMap<PostModel, Post>().ReverseMap();
             CreateMap<CreatePostDto, PostModel>();
             CreateMap<UpdatePostDto, PostModel>();
+            CreateMap<Post, CommentUserModel>().ReverseMap();
         }
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PawsitivelyCare.BLL.Models;
 using PawsitivelyCare.BLL.Services.Interfaces;
+using PawsitivelyCare.DTOs.Comment;
 using System.Security.Claims;
 
 namespace PawsitivelyCare.Controllers
@@ -23,50 +24,29 @@ namespace PawsitivelyCare.Controllers
             _commentService = commentService;
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult> Getcomment(Guid id)
+        [HttpGet("{postId}")]
+        public async Task<ActionResult> GetComments(Guid postId)
         {
-            var comment = await _commentService.GetComment(id);
-            return Ok(comment);
+            var comments = await _commentService.GetComments(postId);
+            return Ok(comments);
         }
 
-        //[HttpGet("{postId}")]
-        //public async Task<ActionResult<List<CommentModel>>> GetComments(Guid postId)
-        //{
-        //    var comments = await _commentService.GeComments(postId);
-        //    return Ok(comments);
-        //}
 
+        [HttpPost]
+        public async Task<ActionResult> CreateComment(CreateCommentDto commentDto)
+        {
+            var commentModel = _mapper.Map<CommentModel>(commentDto);
+            commentModel.SenderId = UserId;
+            var createdcomment = await _commentService.CreateComment(commentModel);
 
-        //[HttpPost("create")]
-        //public async Task<ActionResult> Createcomment(CreateCommentDto commentDto)
-        //{
-        //    var commentModel = _mapper.Map<CommentModel>(commentDto);
-        //    commentModel.CreatorId = UserId;
-        //    var createdcomment = await _commentService.Createcomment(commentModel);
+            return Ok(new { message = "Creation successful", createdcomment });
+        }
 
-        //    return Ok(new { message = "Creation successful", createdcomment });
-        //}
-
-        //[Httpcomment("edit/{id}")]
-        //public async Task<ActionResult<int>> Updatecomment(Guid id, [FromBody] UpdatecommentDto commentDto)
-        //{
-        //    var commentModel = await _commentService.Getcomment(id);
-
-        //    if (commentModel == null)
-        //        return NotFound();
-
-        //    _mapper.Map(commentDto, commentModel);
-        //    await _commentService.Updatecomment(commentModel);
-
-        //    return Ok(new { message = "comment updated successfully" });
-        //}
-
-        //[HttpDelete("{id}")]
-        //public async Task<ActionResult> Deletecomment(Guid id)
-        //{
-        //    await _commentService.Deletecomment(id);
-        //    return NoContent();
-        //}
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteComment(Guid id)
+        {
+            await _commentService.DeleteComment(id);
+            return NoContent();
+        }
     }
 }

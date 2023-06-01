@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using PawsitivelyCare.BLL.Common.Auth;
-using PawsitivelyCare.BLL.Common.Images;
 using PawsitivelyCare.BLL.Services.Interfaces;
 using PawsitivelyCare.BLL.Services.Realizations;
 using PawsitivelyCare.DAL.Contexts;
@@ -82,8 +81,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 #endregion Region
-
-builder.Services.Configure<ImageSettings>(builder.Configuration.GetSection("ImageSettings"));
 
 #region "Swagger"
 
